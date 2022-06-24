@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { QueueModule } from 'src/queue/queue.module';
 
 import SlackController from './controller/slack.controller';
 import {
@@ -10,6 +11,7 @@ import {
 } from './slack.providers';
 
 @Module({
+  imports: [QueueModule],
   providers: [
     webApiSlackService,
     usersSlackService,
