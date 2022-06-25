@@ -1,8 +1,7 @@
 import { Controller, Inject, Post } from '@nestjs/common';
 
-import { SlackProducerService } from 'src/queue/producers/slack.producer.service';
+import { SlackProducerService } from '../../../queue/producers/slack.producer.service';
 import { RetroTeamSlackDto } from '../dto/retro-teams.slack.dto';
-
 import { TYPES } from '../interfaces/types';
 import { ApiSlackService } from '../services/api.slack.service';
 

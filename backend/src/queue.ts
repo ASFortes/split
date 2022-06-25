@@ -4,13 +4,10 @@ import { Logger } from '@nestjs/common';
 import { QueueModule } from './queue/queue.module';
 
 async function bootstrap() {
-  const logger: Logger = new Logger('AppGateway');
+  const logger: Logger = new Logger('QueueModule');
 
-  const app = await NestFactory.create(QueueModule, { cors: true });
-
-  const port = 9876;
-  await app.listen(port);
-
-  logger.log(`Queue is running at ${port}`);
+  const app = await NestFactory.create(QueueModule);
+  logger.log(`Queue is running`);
+  app.init();
 }
 bootstrap();
