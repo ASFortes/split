@@ -7,42 +7,20 @@ import { SlackConsumer } from './consumers/slack.consumer';
 
 @Module({
   imports: [
-    BullModule.forRoot({
-      redis: {
-        host: 'localhost',
-        port: 6379,
-      },
-    }),
-    /* BullModule.registerQueue({
-      name: 'slack-queue',
-      processors: [
-        ((job: Job, done: DoneCallback) => {
-          console.log(`[${process.pid}] ${JSON.stringify(job.data)}`);
-          done(null, 'It works');
-        }) as BullQueueProcessor,
-      ],
-    }), */
     BullModule.registerQueueAsync({
-      name: 'slack-queue',
+      name: SlackProducerService.QUEUE_NAME,
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        name: 'slack-queue',
+        name: SlackProducerService.QUEUE_NAME,
         redis: {
-          host: 'localhost',
-          port: configService.get('REDIS_PORT') || 6379,
+          username: configService.get('redis.user'),
+          password: configService.get('redis.password'),
+          host: configService.get('redis.host'),
+          port: configService.get('redis.port'),
         },
         /* processors: [
           join(__dirname, 'consumers', 'slack.cosnumer.processor.js'),
         ], */
-        // redis: 'localhost', // configService.get('REDIS_URL'),
-        /*  prefix: 'prefix', 
-            defaultJobOptions: {
-              removeOnComplete: true,
-                removeOnFail: true,
-            },
-            settings: {
-              lockDuration: 300000,
-            } */
       }),
       inject: [ConfigService],
     }),

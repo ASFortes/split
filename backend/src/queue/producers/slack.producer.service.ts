@@ -6,10 +6,20 @@ import { RetroTeamSlackDto } from 'src/modules/slack/dto/retro-teams.slack.dto';
 
 @Injectable()
 export class SlackProducerService {
-  constructor(@InjectQueue('slack-queue') private queue: Queue) {}
+  public static readonly QUEUE_NAME = 'slack-queue';
+
+  public static readonly SEND_RETRO_TEAMS_TO_QUEUE_JOB =
+    'slack-send-retro-treams-to-queue-job';
+
+  constructor(
+    @InjectQueue(SlackProducerService.QUEUE_NAME) private queue: Queue,
+  ) {}
 
   // Job Options https://docs.nestjs.com/techniques/queues#job-options
   async sendRetroTeamsToQueue(_retroTeams: RetroTeamSlackDto[]) {
-    await this.queue.add('slack-job', _retroTeams);
+    await this.queue.add(
+      SlackProducerService.SEND_RETRO_TEAMS_TO_QUEUE_JOB,
+      _retroTeams,
+    );
   }
 }
