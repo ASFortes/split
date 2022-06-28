@@ -29,15 +29,27 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
     session: ClientSession,
     cardItemId?: string,
   ) {
-    const getCard = !cardItemId
-      ? await this.getCardService.getCardFromBoard(boardId, cardId)
-      : await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
-    let countVotes = getCard?.votes?.length ?? 0;
+    let countVotes = 0;
+    const card = await this.getCardService.getCardFromBoard(boardId, cardId);
+    countVotes = card?.votes?.length ?? 0;
+    if (cardItemId) {
+      await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
+    }
     countVotes +=
-      getCard?.items?.reduce((acc, curr) => {
+      card?.items?.reduce((acc, curr) => {
         if (acc) return acc + curr.votes.length;
         return 0;
       }, countVotes) ?? 0;
+
+    // const getCard = !cardItemId
+    //   ? await this.getCardService.getCardFromBoard(boardId, cardId)
+    //   : await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
+    // let countVotes = getCard?.votes?.length ?? 0;
+    // 	countVotes +=
+    //   getCard?.items?.reduce((acc, curr) => {
+    //     if (acc) return acc + curr.votes.length;
+    //     return 0;
+    //   }, countVotes) ?? 0;
 
     const boardUser = await this.deleteVoteService.decrementVoteUser(
       boardId,

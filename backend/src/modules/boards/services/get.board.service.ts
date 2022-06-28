@@ -216,6 +216,16 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
       return { board, mainBoardData: mainBoard };
     }
 
+    // board.columns.map(function (column) {
+    //   return column.cards.map(function (card) {
+    //     console.log(card.createdBy);
+    //     return card;
+    //   });
+
+    // console.log(column.cards.);
+    // return column;
+    // });
+
     return { board };
   }
 

@@ -11,6 +11,8 @@ import Board, { BoardDocument } from '../../boards/schemas/board.schema';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { UnmergeCardService } from '../interfaces/services/unmerge.card.service.interface';
 import { TYPES } from '../interfaces/types';
+import { CardItemDocument } from '../schemas/card.item.schema';
+import Card from '../schemas/card.schema';
 import { pullItem } from '../shared/pull.card';
 import { pushCardIntoPosition } from '../shared/push.card';
 
@@ -93,14 +95,18 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
         if (!updateResult) throw Error(UPDATE_FAILED);
       }
 
-      const newCardItem = { ...cardItemToMove };
+      const newCardItem = {
+        ...cardItemToMove,
+      } as unknown as CardItemDocument;
       delete newCardItem._id;
 
-      const newCard = {
-        ...cardItemToMove,
+      const newCard: Card = {
+        createdByTeam: cardItemToMove.createdByTeam,
         comments: [],
         votes: [],
         items: [newCardItem],
+        text: '',
+        createdBy: cardItemToMove.createdBy,
       };
 
       const pushResult = await pushCardIntoPosition(

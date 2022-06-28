@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsMongoId,
   IsNotEmpty,
   IsOptional,
@@ -33,4 +34,8 @@ export default class CardItemDto {
   @IsNotEmpty()
   @ValidateNested({ each: true })
   votes!: string[];
+
+  @IsNotEmpty()
+  @IsBoolean()
+  anonymous!: boolean;
 }

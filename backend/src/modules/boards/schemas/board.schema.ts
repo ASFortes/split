@@ -57,9 +57,6 @@ export default class Board {
 
   @Prop({ type: Boolean, nullable: false, default: false })
   hideVotes?: boolean;
-
-  @Prop({ type: Boolean, nullable: false, default: false })
-  postAnonymously?: boolean;
 }
 
 export const BoardSchema = SchemaFactory.createForClass(Board);
