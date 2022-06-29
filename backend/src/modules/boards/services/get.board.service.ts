@@ -1,6 +1,7 @@
 import { Inject, Logger, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import User from 'src/modules/users/schemas/user.schema';
 import { BOARDS_NOT_FOUND } from '../../../libs/exceptions/messages';
 import { GetTeamServiceInterface } from '../../teams/interfaces/services/get.team.service.interface';
 import * as Team from '../../teams/interfaces/types';
@@ -213,18 +214,21 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
         .lean({ virtuals: true })
         .exec();
       if (!mainBoard) return null;
+
       return { board, mainBoardData: mainBoard };
     }
 
-    // board.columns.map(function (column) {
-    //   return column.cards.map(function (card) {
-    //     console.log(card.createdBy);
-    //     return card;
-    //   });
-
-    // console.log(column.cards.);
-    // return column;
-    // });
+    board.columns.forEach(function (column) {
+      column.cards.forEach(function (card) {
+        card.items.forEach(function (item) {
+          if (!item.anonymous) {
+            const cardItem = item.createdBy as User;
+            cardItem.firstName = cardItem.firstName.replace(/[a-zA-Z]/g, 'a');
+            cardItem.lastName = cardItem.lastName.replace(/[a-zA-Z]/g, 'a');
+          }
+        });
+      });
+    });
 
     return { board };
   }
